@@ -35,8 +35,8 @@ def load_all_models():
         return {}
     
     # 파일 경로 설정
-    day_base_path = Path("/day")
-    night_base_path = Path("/night")
+    day_base_path = Path("day")
+    night_base_path = Path("night")
     
     # Day 모델들 로딩 (조용히)
     # Day TabNet
