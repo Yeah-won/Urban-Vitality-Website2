@@ -2,7 +2,7 @@
 streamlit>=1.25.0
 streamlit-folium>=0.11.0
 
-# 지도 및 지리정보 처리
+# 지도 및 지리정보 처리 (사전 컴파일된 바이너리 사용)
 folium>=0.12.0
 geopandas>=0.13.0
 Fiona>=1.8.0
@@ -28,12 +28,3 @@ joblib>=1.3.0
 
 # 수학 계산
 scipy>=1.9.0
-
-# 파일 처리 (GPKG 등)
-GDAL>=3.4.0
-
-# 기타 유틸리티
-pathlib2>=2.3.0  # Python < 3.8 호환성용 (필요시)
-io
-json
-warnings
