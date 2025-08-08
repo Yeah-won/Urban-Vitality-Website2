@@ -232,7 +232,7 @@ st.markdown("""
 
 # 페이지 설정
 st.set_page_config(layout="wide")
-st.title("택지개발지구 생활인구 예측 UI")
+st.title("택지개발지구 생활인구 예측")
 
 
 # 1. 세션 상태 초기화 
