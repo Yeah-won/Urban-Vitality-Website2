@@ -307,9 +307,9 @@ with st.sidebar:
         
         # 모델 타입별 표시명과 아이콘
         type_display_info = {
-             "TabNet": "🧠 **TabNet**: 딥러닝 기반 해석 가능한 신경망 모델",
-            "XGBoost": "🚀 **XGBoost**: 그래디언트 부스팅 기반 고성능 머신러닝 모델", 
-            "LightGBM": "⚡ **LightGBM**: 빠르고 효율적인 그래디언트 부스팅 모델"
+    "TabNet":   {"emoji": "🧠", "description": "복잡한 패턴과 변수 관계를 학습하는 딥러닝 기반 신경망 모델"},
+    "XGBoost":  {"emoji": "🚀", "description": "정교한 부스팅으로 최고 수준의 예측 정확도를 제공하는 모델"},
+    "LightGBM": {"emoji": "⚡", "description": "초고속 예측과 대규모 데이터 처리에 최적화된 부스팅 모델"},
         }
         
         # 모델 타입 선택
