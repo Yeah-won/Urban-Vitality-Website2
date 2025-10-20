@@ -415,13 +415,6 @@ if st.session_state.get("last_index", -1) != selected_index:
     center = selected_poly.centroid
     area = selected_row.get("area(km2)", 1)
 
-    # 🔥 시설 개수 입력 폼의 key들도 초기화
-    facility_cols = ["sub_500m","pharmacy", "hospital", "restaurant", "cafe", "CVS", "school"]
-    for name in facility_cols:
-        input_key = f"input_{name}"
-        if input_key in st.session_state:
-            del st.session_state[input_key]  # 🔥 추가
-
     # 🔥 sub_500m은 이미 절대값이므로 그대로 사용, 나머지는 밀도×면적
     st.session_state["sub_500m"] = int(round(selected_row.get("sub_500m", 0)))  # 절대값 그대로
 
@@ -710,7 +703,7 @@ with col3:
                 f"", 
                 0, 100, 
                 current_val, 
-                key=f"{key}_slider",
+                key=f"{key}_slider_{st.session_state.selected_index}",  # 🔥 여기 수정
                 help=f"{ratio_labels[key]} 비율 - 도시활력에 큰 영향을 미치는 핵심 변수입니다."
             )
             st.session_state[key] = ratio_values[key]
@@ -727,7 +720,7 @@ with col3:
                 ratio_labels[key], 
                 0, 100, 
                 current_val, 
-                key=f"{key}_slider"
+                key=f"{key}_slider_{st.session_state.selected_index}"  # 🔥 여기도 수정
             )
             st.session_state[key] = ratio_values[key]
     
@@ -748,7 +741,7 @@ with col3:
     st.markdown(f"**총 합계: <span style='color: {color}'>{total_ratio}% ({status})</span>**", unsafe_allow_html=True)
     
     # 각 비율을 막대그래프로 시각화
-    if st.checkbox("📊 비율 시각화", value=False):
+    if st.checkbox("📊 비율 시각화", value=False, key=f"viz_check_{st.session_state.selected_index}"):  # 🔥 여기도 수정
         fig, ax = plt.subplots(figsize=(10, 5))
         
         # 중요한 변수와 일반 변수 분리
@@ -781,16 +774,20 @@ with col3:
         plt.tight_layout()
         st.pyplot(fig)
     
-    # 시설 개수 입력 폼
-    with st.form("입력폼"):
+    # 시설 개수 입력 폼 - 🔥🔥🔥 핵심 수정 부분
+    with st.form(key=f"입력폼_{st.session_state.selected_index}"):  # 🔥 Form key에 index 추가
         facility_cols = ["sub_500m","pharmacy", "hospital", "restaurant", "cafe", "CVS", "school"]
         
         st.subheader("시설 개수 입력")
         for name in facility_cols:
-            st.session_state[name] = st.number_input(
-                f"{name} 개수", min_value=0, step=1,
-                value=st.session_state.get(name, 0), key=f"input_{name}"
+            # 🔥 number_input은 key 없이 사용 (form 안에서는 key가 자동으로 관리됨)
+            input_value = st.number_input(
+                f"{name} 개수", 
+                min_value=0, 
+                step=1,
+                value=st.session_state.get(name, 0)
             )
+            st.session_state[name] = input_value
         
         submitted = st.form_submit_button("적용")
 
