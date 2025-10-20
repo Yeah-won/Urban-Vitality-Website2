@@ -539,14 +539,33 @@ with col2:
     if pie_data:
         labels, values = zip(*pie_data)
 
-        fig, ax = plt.subplots(figsize=(3.0, 3.0))
-        ax.pie(
+        fig, ax = plt.subplots(figsize=(3.5, 3.5))
+        
+        # 🔥 autopct 함수로 작은 값은 라벨 숨기기
+        def autopct_format(pct):
+            return f'{pct:.1f}%' if pct > 5 else ''
+        
+        wedges, texts, autotexts = ax.pie(
             values,
             labels=labels,
-            autopct='%1.1f%%',
+            autopct=autopct_format,
             startangle=90,
-            textprops={'fontsize': 9}
+            textprops={'fontsize': 9, 'family': 'Malgun Gothic'},  # 🔥 한글 폰트 추가
+            pctdistance=0.85,
+            labeldistance=1.1
         )
+        
+        # 🔥 퍼센트 텍스트 스타일 개선
+        for autotext in autotexts:
+            autotext.set_color('white')
+            autotext.set_fontweight('bold')
+            autotext.set_fontsize(8)
+            autotext.set_family('Malgun Gothic')  # 🔥 한글 폰트
+        
+        # 🔥 라벨 텍스트에도 한글 폰트 적용
+        for text in texts:
+            text.set_family('Malgun Gothic')  # 🔥 한글 폰트
+        
         ax.axis('equal')
 
         # ✅ 고해상도 저장
@@ -554,15 +573,10 @@ with col2:
         fig.savefig(buf, format="png", dpi=200, bbox_inches="tight")
         buf.seek(0)
 
-         # ✅ Streamlit 출력
+        # ✅ Streamlit 출력
         st.image(buf, use_container_width=True)
     else:
         st.info("표시할 용지 구성비가 없습니다.")
-
-    # 지표 테이블
-    st.subheader("고정 변수")
-    # 스타일 넣기
-    # ✅ 마우스 오버 툴팁 + CSS로 테이블 너비 조정
             
     # 설명 툴팁 정의
     tooltips = {
