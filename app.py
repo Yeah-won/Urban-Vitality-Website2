@@ -15,6 +15,35 @@ from pytorch_tabnet.tab_model import TabNetRegressor
 import torch
 import joblib
 from pathlib import Path
+from matplotlib import font_manager, rc
+
+# 🔥 한글 폰트 설정 (GitHub/Streamlit Cloud용)
+@st.cache_resource
+def setup_korean_font():
+    """한글 폰트를 설정하는 함수"""
+    font_path = Path("fonts/NanumGothic.ttf")  # 폰트 파일 경로
+    
+    if font_path.exists():
+        # 폰트 파일이 있으면 등록
+        font_manager.fontManager.addfont(str(font_path))
+        font_name = font_manager.FontProperties(fname=str(font_path)).get_name()
+        plt.rcParams['font.family'] = font_name
+        mpl.rcParams['axes.unicode_minus'] = False
+        return font_name
+    else:
+        # 폰트 파일이 없으면 시스템 폰트 사용 시도
+        try:
+            plt.rcParams['font.family'] = 'Malgun Gothic'
+            mpl.rcParams['axes.unicode_minus'] = False
+            return 'Malgun Gothic'
+        except:
+            # 최후의 수단: DejaVu Sans 사용 (한글 안 나올 수 있음)
+            plt.rcParams['font.family'] = 'DejaVu Sans'
+            mpl.rcParams['axes.unicode_minus'] = False
+            return 'DejaVu Sans'
+
+# 폰트 설정 실행
+korean_font = setup_korean_font()
 
 @st.cache_resource
 def load_all_models():
@@ -539,9 +568,12 @@ with col2:
     if pie_data:
         labels, values = zip(*pie_data)
 
+        # 🔥 매번 폰트 설정 확인
+        plt.rcParams['font.family'] = korean_font
+        plt.rcParams['axes.unicode_minus'] = False
+
         fig, ax = plt.subplots(figsize=(3.5, 3.5))
         
-        # 🔥 autopct 함수로 작은 값은 라벨 숨기기
         def autopct_format(pct):
             return f'{pct:.1f}%' if pct > 5 else ''
         
@@ -550,30 +582,23 @@ with col2:
             labels=labels,
             autopct=autopct_format,
             startangle=90,
-            textprops={'fontsize': 9, 'family': 'Malgun Gothic'},  # 🔥 한글 폰트 추가
+            textprops={'fontsize': 9},
             pctdistance=0.85,
             labeldistance=1.1
         )
         
-        # 🔥 퍼센트 텍스트 스타일 개선
         for autotext in autotexts:
             autotext.set_color('white')
             autotext.set_fontweight('bold')
             autotext.set_fontsize(8)
-            autotext.set_family('Malgun Gothic')  # 🔥 한글 폰트
-        
-        # 🔥 라벨 텍스트에도 한글 폰트 적용
-        for text in texts:
-            text.set_family('Malgun Gothic')  # 🔥 한글 폰트
         
         ax.axis('equal')
 
-        # ✅ 고해상도 저장
         buf = io.BytesIO()
         fig.savefig(buf, format="png", dpi=200, bbox_inches="tight")
         buf.seek(0)
+        plt.close(fig)
 
-        # ✅ Streamlit 출력
         st.image(buf, use_container_width=True)
     else:
         st.info("표시할 용지 구성비가 없습니다.")
