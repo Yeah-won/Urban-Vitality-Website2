@@ -775,7 +775,7 @@ with col3:
         st.pyplot(fig)
     
     # 시설 개수 입력 폼
-    with st.form("입력폼"):
+    with st.form(key=f"입력폼_{st.session_state.selected_index}"):
         facility_cols = ["sub_500m","pharmacy", "hospital", "restaurant", "cafe", "CVS", "school"]
         
         st.subheader("시설 개수 입력")
