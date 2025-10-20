@@ -415,6 +415,13 @@ if st.session_state.get("last_index", -1) != selected_index:
     center = selected_poly.centroid
     area = selected_row.get("area(km2)", 1)
 
+    # 🔥 시설 개수 입력 폼의 key들도 초기화
+    facility_cols = ["sub_500m","pharmacy", "hospital", "restaurant", "cafe", "CVS", "school"]
+    for name in facility_cols:
+        input_key = f"input_{name}"
+        if input_key in st.session_state:
+            del st.session_state[input_key]  # 🔥 추가
+
     # 🔥 sub_500m은 이미 절대값이므로 그대로 사용, 나머지는 밀도×면적
     st.session_state["sub_500m"] = int(round(selected_row.get("sub_500m", 0)))  # 절대값 그대로
 
@@ -775,7 +782,7 @@ with col3:
         st.pyplot(fig)
     
     # 시설 개수 입력 폼
-    with st.form(key=f"입력폼_{st.session_state.selected_index}"):
+    with st.form("입력폼"):
         facility_cols = ["sub_500m","pharmacy", "hospital", "restaurant", "cafe", "CVS", "school"]
         
         st.subheader("시설 개수 입력")
