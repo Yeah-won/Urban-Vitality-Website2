@@ -275,7 +275,7 @@ if "result_df" not in st.session_state:
     st.session_state.result_df = None
 if "predictions" not in st.session_state:  # 🆕 듀얼 예측 결과용
     st.session_state.predictions = None
-if "prediction_model_type" not in st.session_state:  # 🆕 선택된 모델 타입 저장용
+if "prediction_model_type" not in st.session_state:  # 🆕 선택된 모델 타입 저장
     st.session_state.prediction_model_type = None
 if "need_prediction" not in st.session_state:     
     st.session_state.need_prediction = False
